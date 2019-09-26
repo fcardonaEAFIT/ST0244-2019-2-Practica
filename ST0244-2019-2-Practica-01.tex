@@ -59,11 +59,11 @@ produce:
 \]
 
 Robinson~\cite{robinson} definió un algoritmo llamado de unificación
-que permite solucionar este tipo de problemas. En los cuales
-recibe una seríe de restricciones de la forma $T \equiv S$ y encuentra
-un conjunto de sustituciones que permite transformar un tipo en
-el otro. El algoritmo de unificación para los tipos de datos sirve para ``igualar'' dos tipos
-(ver \ref{sec:lenguajetipos}).
+que permite solucionar este tipo de problemas. En los cuales recibe
+una seríe de restricciones de la forma $T \equiv S$ y encuentra un
+conjunto de sustituciones que permite transformar un tipo en el
+otro. El algoritmo de unificación para los tipos de datos sirve para
+``igualar'' dos tipos (ver sección~\ref{sec:lenguajetipos}).
 
 \section{Algoritmo}\label{sec:algoritmo}
 
@@ -103,10 +103,11 @@ libro de Pierce~\cite{pierce}.
 
 El algoritmo toma como entrada un conjunto de restricciones $C$, donde
 cada restricción es un par ordenado de forma $\{ S = T \}$ y cada
-elemento del par ordenado es un tipo (ver \ref{sec:lenguajetipos}). El
-algoritmo retorna un conjunto de sustituciones $\Theta$ y cada
-sustitución es de la forma $\{ X \mapsto T\}$, donde $X \in Var$ es
-una variable y $T$ es un tipo (ver \ref{sec:lenguajetipos}).
+elemento del par ordenado es un tipo (ver
+sección~\ref{sec:lenguajetipos}). El algoritmo retorna un conjunto de
+sustituciones $\Theta$ y cada sustitución es de la forma
+$\{ X \mapsto T\}$, donde $X \in Var$ es una variable y $T$ es un tipo
+(ver sección~\ref{sec:lenguajetipos}).
 
 En la línea 2, el algoritmo verifica si el conjunto de restriciones
 $C$ es vacío retorna un conjunto $\Theta$ también vacío.
@@ -119,19 +120,21 @@ caso realiza la unificación al resto del conjunto $C'$.
 
 En la línea 7, el algoritmo verifica si uno de los tipos es una
 variable $X$ y ella no pertence al conjunto de variables libres
-$FV(S)$ (ver~\ref{sec:fv}) del otro tipo $S$. Si este es el caso, en
-la línea 8 realiza la unificación con la aplicación
-(ver~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto S $ al
+$FV(S)$ (ver sección~\ref{sec:fv}) del otro tipo $S$. Si este es el
+caso, en la línea 8 realiza la unificación con la aplicación (ver
+sección~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto S $ al
 conjunto $C'$; el resultado de la unificación es compuesto $\circ$
-(ver~\ref{sec:compsus}) con la sustitución $\theta = X \mapsto S $.
+(ver sección~\ref{sec:compsus}) con la sustitución
+$\theta = X \mapsto S $.
 
 En la línea 9, el algoritmo verifica si uno de los tipos es una
 variable $X$ y ella no pertence al conjunto de variables libres
-$FV(T)$ (ver~\ref{sec:fv}) del otro tipo $t$. Si este es el caso, en
-la línea 8 realiza la unificación con la aplicación
-(ver~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto t $ al
+$FV(T)$ (ver sección~\ref{sec:fv}) del otro tipo $t$. Si este es el
+caso, en la línea 8 realiza la unificación con la aplicación (ver
+sección~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto t $ al
 conjunto $C'$; el resultado de la unificación es compuesto $\circ$
-(ver~\ref{sec:compsus}) con la sustitución $\theta = X \mapsto T $.
+(ver sección~\ref{sec:compsus}) con la sustitución
+$\theta = X \mapsto T $.
 
 En la línea 11, el algoritmo verifica si ambos tipos son funciones:
 $\{S \equiv S_1 \to S_2\}$ y $\{T \equiv T_1 \to T_2\}$. Realiza la
@@ -156,11 +159,11 @@ son los tipos de datos $\tau$:
 \]
 
 En la primera producción un tipo es una variable $X$ que pertenece al
-conjunto de variables $Var$ (ver~\ref{sec:var}). La segunda producción
-identifica que el tipo es un entero $\text{Int}$. La tercera
-producción indica que es un tipo booleano $\text{Bool}$. La cuarta y
-última, indica que el tipo es una función que recibe un tipo $\tau_1$ y
-retorna un tipo $\tau_2$.
+conjunto de variables $Var$ (ver sección~\ref{sec:var}). La segunda
+producción identifica que el tipo es un entero $\text{Int}$. La
+tercera producción indica que es un tipo booleano $\text{Bool}$. La
+cuarta y última, indica que el tipo es una función que recibe un tipo
+$\tau_1$ y retorna un tipo $\tau_2$.
 
 \subsection{Ejemplos de tipos}
 \label{sec:ejemtipos}
@@ -193,8 +196,8 @@ sencillos:
 \section{Estructura de datos}\label{sec:estructdatos}
 
 A continuación se muestra una descripción de los tipos de datos
-utilizados por la función $unify$ y sus funciones auxiliares
-(ver~\ref{sec:funaux}).
+utilizados por la función $unify$ y sus funciones auxiliares (ver
+sección~\ref{sec:funaux}).
 
 \subsection{Variables}
 \label{sec:var}
