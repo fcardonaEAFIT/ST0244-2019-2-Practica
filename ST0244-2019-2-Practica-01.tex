@@ -340,13 +340,14 @@ La siguiente es la definición de la gramática de entrada:
 \[
   \begin{array}[h]{rcl}
     Entrada & \to  & ListaEquiv EOF \\
-    ListaEquiv & \to & \tau = \tau\ EOL\ ListaEquiv\\
+    ListaEquiv & \to & Tipo = Tipo\ EOL\ ListaEquiv\\
             & \to & \epsilon \\
-    \tau    & \to & VAR \\
-            & \to & int \\
-            & \to & bool \\
-            & \to & \tau \to \tau \\
-            & \to & (\tau) \\
+    Tipo    & \to & VAR\  TipoRest\\
+            & \mid & int\ TipoRest\\
+            & \mid & bool\ TipoRest \\
+            & \mid & (\ Tipo\ ) \\
+    TipoRest & \to & \text{-$>$}\ Tipo \\
+             & \mid & \epsilon \\
   \end{array}
 \]
 
@@ -372,8 +373,6 @@ verificados si son equivalentes o no. Los símbolos \verb!<EOL>! y
 primer caracter es visible y el segundo es simple un evento.
 \section{Requerimientos}
 \label{sec:requerimientos}
-
-
 
 
 \subsection{Técnicos}
@@ -404,9 +403,9 @@ primer caracter es visible y el segundo es simple un evento.
       <email>fcardona@eafit.edu.co</email>
    </miembro>
    <miembro>
-      <nombre>Alejandro Gómez Londoño</nombre>
+      <nombre>Santiago </nombre>
       <codigo>201010001010</codigo>
-      <email>alegomez544@eafit.edu.co</email>
+      <email>@eafit.edu.co</email>
    </miembro>
 </grupo>
 \end{alltt}
