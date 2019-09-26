@@ -63,14 +63,14 @@ ecuación, lo que nos produce:
 
 Robinson~\cite{robinson} definió un algoritmo llamado de unificación
 que permite solucionar este tipo de problemas. En los cuales recibe
-una seríe de restricciones de la forma $T \equiv S$ y encuentra un
+una serie de restricciones de la forma $T \equiv S$ y encuentra un
 conjunto de sustituciones que permite transformar un tipo en el
 otro. El algoritmo de unificación para los tipos de datos sirve para
 ``igualar'' dos tipos (ver sección~\ref{sec:lenguajetipos}).
 
 \section{Algoritmo}\label{sec:algoritmo}
 
-En algoritmo~\ref{alg:unificacion} es una copia del encontrado en el
+El algoritmo~\ref{alg:unificacion} es una copia del encontrado en el
 libro de Pierce~\cite{pierce}.
 
 \begin{algorithm}[h!]
@@ -105,46 +105,48 @@ libro de Pierce~\cite{pierce}.
 \end{algorithm}
 
 El algoritmo toma como entrada un conjunto de restricciones $C$, donde
-cada restricción es un par ordenado de forma $\{ S = T \}$ y cada
+cada restricción es un par ordenado de la forma $\{ S = T \}$ y cada
 elemento del par ordenado es un tipo (ver
 sección~\ref{sec:lenguajetipos}). El algoritmo retorna un conjunto de
 sustituciones $\Theta$ y cada sustitución es de la forma
 $\{ X \mapsto T\}$, donde $X \in Var$ es una variable y $T$ es un tipo
 (ver sección~\ref{sec:lenguajetipos}).
 
-En la línea 2, el algoritmo verifica si el conjunto de restriciones
-$C$ es vacío retorna un conjunto $\Theta$ también vacío.
+En la línea~2, el algoritmo verifica si el conjunto de
+restricciones~$C$ es vacío y retorna un conjunto~$\Theta$ también
+vacío.
 
-En la línea 5, el algoritmo separa el conjunto restriciones $C$ en dos
-partes: la primera es el primer elemento del conjunto $\{ S \equiv T
-\}$ y la segunda parte es el resto del conjunto $C'$. También en ésta
-línea se verifica si los tipos básicos son idénticos, si este es el
-caso realiza la unificación al resto del conjunto $C'$.
+En la línea~5, el algoritmo separa el conjunto de restricciones~$C$ en
+dos partes: la primera es el primer elemento del conjunto
+$\{ S \equiv T \}$ y la segunda parte es el resto del
+conjunto~$C'$. También en ésta línea se verifica si los tipos básicos
+son idénticos, si este es el caso realiza la unificación al resto del
+conjunto~$C'$.
 
-En la línea 7, el algoritmo verifica si uno de los tipos es una
+En la línea~7, el algoritmo verifica si uno de los tipos es una
 variable $X$ y ella no pertence al conjunto de variables libres
 $FV(S)$ (ver sección~\ref{sec:fv}) del otro tipo $S$. Si este es el
-caso, en la línea 8 realiza la unificación con la aplicación (ver
-sección~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto S $ al
-conjunto $C'$; el resultado de la unificación es compuesto $\circ$
+caso, en la línea~8 realiza la unificación con la aplicación (ver
+sección~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto S$ al
+conjunto $C'$; el resultado de la unificación es compuesto~$\circ$
 (ver sección~\ref{sec:compsus}) con la sustitución
-$\theta = X \mapsto S $.
+$\theta = X \mapsto S$.
 
-En la línea 9, el algoritmo verifica si uno de los tipos es una
+En la línea~9, el algoritmo verifica si uno de los tipos es una
 variable $X$ y ella no pertence al conjunto de variables libres
 $FV(T)$ (ver sección~\ref{sec:fv}) del otro tipo $t$. Si este es el
-caso, en la línea 8 realiza la unificación con la aplicación (ver
-sección~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto t $ al
-conjunto $C'$; el resultado de la unificación es compuesto $\circ$
+caso, en la línea~8 realiza la unificación con la aplicación (ver
+sección~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto t$ al
+conjunto $C'$; el resultado de la unificación es compuesto~$\circ$
 (ver sección~\ref{sec:compsus}) con la sustitución
-$\theta = X \mapsto T $.
+$\theta = X \mapsto T$.
 
-En la línea 11, el algoritmo verifica si ambos tipos son funciones:
+En la línea~11, el algoritmo verifica si ambos tipos son funciones:
 $\{S \equiv S_1 \to S_2\}$ y $\{T \equiv T_1 \to T_2\}$. Realiza la
 unificación con el conjunto $C'$ unido con dos restricciones más: el
-tipo $S_1 \equiv T_1$ y $S_2 \equiv T_2$.
+tipo $S_1 \equiv T_1$ y el tipo $S_2 \equiv T_2$.
 
-En la línea 14, el algoritmo llega si ninguna de la anteriores
+En la línea~14, el algoritmo llega si ninguna de la anteriores
 condiciones se cumple, por lo tanto no puede unificar y falla.
 
 \section{Lenguajes de tipos}\label{sec:lenguajetipos}
@@ -163,10 +165,10 @@ son los tipos de datos $\tau$:
 
 En la primera producción un tipo es una variable $X$ que pertenece al
 conjunto de variables $Var$ (ver sección~\ref{sec:var}). La segunda
-producción identifica que el tipo es un entero $\text{Int}$. La
-tercera producción indica que es un tipo booleano $\text{Bool}$. La
-cuarta y última, indica que el tipo es una función que recibe un tipo
-$\tau_1$ y retorna un tipo $\tau_2$.
+producción indica que el tipo es un entero $\text{Int}$. La tercera
+producción indica que es un tipo booleano $\text{Bool}$. La cuarta y
+última, indica que el tipo es una función que recibe un tipo $\tau_1$
+y retorna un tipo $\tau_2$.
 
 \subsection{Ejemplos de tipos}
 \label{sec:ejemtipos}
@@ -243,8 +245,8 @@ transforma en otro tipo.
 \subsection{Conjuntos}
 \label{sec:conjuntos}
 
-Existen dos tipo de conjuntos: uno de restricciones $C$ y otro de
-sustituciones $\Theta$.
+Existen dos tipo de conjuntos: uno de restricciones~$C$ y otro de
+sustituciones~$\Theta$.
 
 
 \section{Funciones auxiliares}
@@ -313,7 +315,7 @@ sobre tipos sobre los tipos:
   \alpha = \theta \to \tau \to \tau
 \]
 
-Si la sustitución $\theta$ es definido como $[ X' \mapsto S']$,
+Si la sustitución~$\theta$ es definida como $[ X' \mapsto S']$,
 entonces la aplicación $\alpha$ está definida como:
 
 \[
@@ -473,13 +475,22 @@ primer caracter es visible y el segundo es simple un evento.
 \begin{thebibliography}{9}
 \bibitem{arnold} Arnold, Ken. Gosling, James. \emph{The Java
     Programming Language}. 2005.
+
 \bibitem{hindley} Hindley, J. Roger. The principal type-scheme of an
   object in combinatory logic. \emph{Transactions of the American
-    Mathematical Societe}, 146:29-60. 1969.
-\bibitem{pierce} Pierce, Benjamin C. \emph{Type and Programming Languages}. The MIT Press. 2002.
-\bibitem{pilato} Pilato, Michael C. Collins-Sussman, Ben. Fitzpatrick, Brian W. \emph{Version Control with Subversion}. 2008.
-\bibitem{robinson} Robinson, J. Alan. Computational logic: The unification computation. \emph{Machine Intelligence}, 6:63-72, 1971.
-  % \bibitem{louden} Louden, Kenneth C. Lenguajes de programación. Principios y práctica. (2003), 87--91.
+    Mathematical Society}, 146:29-60. 1969.
+
+\bibitem{pierce} Pierce, Benjamin C. \emph{Type and Programming
+    Languages}. The MIT Press. 2002.
+
+\bibitem{pilato} Pilato, Michael C. Collins-Sussman, Ben. Fitzpatrick,
+  Brian W. \emph{Version Control with Subversion}. 2008.
+
+\bibitem{robinson} Robinson, J. Alan. Computational logic: The
+  unification computation. \emph{Machine Intelligence}, 6:63-72, 1971.
+
+% \bibitem{louden} Louden, Kenneth C. Lenguajes de
+%   programación. Principios y práctica. (2003), 87--91.
 
 \end{thebibliography}
 
