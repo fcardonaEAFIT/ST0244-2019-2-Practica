@@ -1,0 +1,485 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amssymb,latexsym}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{alltt}
+\usepackage{url}
+% \usepackage{algorithm}
+% \usepackage{algorithmc}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\newcommand{\TI}[1]{\text{\textit{#1}}}
+\newcommand{\TC}[1]{\text{'\textbf{#1}'}}
+\newcommand{\TL}[1]{\text{\texttt{#1}}}
+\newcommand{\TP}[1]{'\mathbf{#1}'}
+\newcommand{\UNUMBER}[1]{\begin{math}_{#1}\end{math}}
+
+\title{Primera práctica de lenguajes de programación\\Algoritmo de unificación\\Implementación en C++}
+\date{26 de Septiembre de 2019}
+\author{Edwin Andrey Duque Loaiza\\Andrés Sicard Ramírez\\Edison Valencia Díaz\\Juan Francisco Cardona Mc'Cormick}
+
+\begin{document}
+\maketitle{}
+
+\section{Introducción}
+\label{sec:Introduccion}
+
+En la verificación o inferencia de tipos en los lenguajes de
+programación, se requiere comprobar que dos tipos son equivalentes. La
+noción de equivalencia dice que dos tipos son equivalentes si se
+encuentra un sustitución que transforme ambos tipos en el mismo. Por
+ejemplo, si tenemos el tipo de dato $\tau_1 = \text{Int}$ y el tipo de
+dato $\tau_2 = \text{Int}$, la equivalencia entre ambos es obvia:
+
+\[
+  \text{Int} \equiv \text{Int}
+\]
+
+Puesto ambos son iguales su sustitución $\theta$ es vacía.
+
+En otros casos, como: $\tau_3 = a \to a$ y $\tau_4 = \text{Int}
+\to \text{Int}$, se requiere de un poco más de esfuerzo
+
+\[
+  a \to a \equiv \text{Int} \to \text{Int}
+\]
+
+En esta ecuación se debe sustituir uno de los lados de la ecuación
+para obtener algo que sea equivalente, en este caso la sustitución
+obvia es sustituir a la variable $a$ por el tipo $Int$ y aplicar dicha
+sustitución ($\theta = a \mapsto Int$) a la ecuación, lo que nos
+produce:
+
+\[
+  Int \to Int \equiv Int \to Int
+\]
+
+Robinson~\cite{robinson} definió un algoritmo llamado de unificación
+que permite solucionar este tipo de problemas. En los cuales
+recibe una seríe de restricciones de la forma $T \equiv S$ y encuentra
+un conjunto de sustituciones que permite transformar un tipo en
+el otro. El algoritmo de unificación para los tipos de datos sirve para ``igualar'' dos tipos
+(ver \ref{sec:lenguajetipos}).
+
+\section{Algoritmo}\label{sec:algoritmo}
+
+En algoritmo~\ref{alg:unificacion} es una copia del encontrado en el
+libro de Pierce~\cite{pierce}.
+
+\begin{algorithm}[h!]
+  \DontPrintSemicolon
+  \LinesNumbered
+  \KwData{$C = \{(S \equiv T) \mid S \in Type \wedge T \in Type \}$ }
+  \KwResult{$\Theta = \{(X \mapsto T) \mid X \in Var \wedge T \in Type\}$ }
+  \Begin{
+    \If {$C = \emptyset$}{
+      $[\ ]$\;
+    }
+    \Else{
+      \textbf{let} $\{S \equiv T\} \cup C' = C$ \textbf{in}
+      \If{$S = T$}{
+        $unify(C')$;
+      }
+      \ElseIf{$S = X\ \text{\textbf{and}}\  X \notin FV(T)$}{
+        $unify([X \mapsto T]C') \circ [X \mapsto T]$;
+      }
+      \ElseIf{$T = X\ \text{\textbf{and}}\  X \notin FV(T)$}{
+        $unify([X \mapsto S]C') \circ [X \mapsto S]$;
+      }
+      \ElseIf{$S \equiv S_1 \to S_2\ \text{\textbf{and}}\ T \equiv T_1 \to T_2$}{
+        $unify(C' \cup \{S_1 \equiv T_1, S_2 \equiv T_2\})$;
+      }
+      \Else{
+        \emph{fail};
+      }
+    }
+  }
+  \caption{$unify(C)$}\label{alg:unificacion}
+\end{algorithm}
+
+El algoritmo toma como entrada un conjunto de restricciones $C$, donde
+cada restricción es un par ordenado de forma $\{ S = T \}$ y cada
+elemento del par ordenado es un tipo (ver \ref{sec:lenguajetipos}). El
+algoritmo retorna un conjunto de sustituciones $\Theta$ y cada
+sustitución es de la forma $\{ X \mapsto T\}$, donde $X \in Var$ es
+una variable y $T$ es un tipo (ver \ref{sec:lenguajetipos}).
+
+En la línea 2, el algoritmo verifica si el conjunto de restriciones
+$C$ es vacío retorna un conjunto $\Theta$ también vacío.
+
+En la línea 5, el algoritmo separa el conjunto restriciones $C$ en dos
+partes: la primera es el primer elemento del conjunto $\{ S \equiv T
+\}$ y la segunda parte es el resto del conjunto $C'$. También en ésta
+línea se verifica si los tipos básicos son idénticos, si este es el
+caso realiza la unificación al resto del conjunto $C'$.
+
+En la línea 7, el algoritmo verifica si uno de los tipos es una
+variable $X$ y ella no pertence al conjunto de variables libres
+$FV(S)$ (ver~\ref{sec:fv}) del otro tipo $S$. Si este es el caso, en
+la línea 8 realiza la unificación con la aplicación
+(ver~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto S $ al
+conjunto $C'$; el resultado de la unificación es compuesto $\circ$
+(ver~\ref{sec:compsus}) con la sustitución $\theta = X \mapsto S $.
+
+En la línea 9, el algoritmo verifica si uno de los tipos es una
+variable $X$ y ella no pertence al conjunto de variables libres
+$FV(T)$ (ver~\ref{sec:fv}) del otro tipo $t$. Si este es el caso, en
+la línea 8 realiza la unificación con la aplicación
+(ver~\ref{sec:aplsus}) de la sustitución $\theta = X \mapsto t $ al
+conjunto $C'$; el resultado de la unificación es compuesto $\circ$
+(ver~\ref{sec:compsus}) con la sustitución $\theta = X \mapsto T $.
+
+En la línea 11, el algoritmo verifica si ambos tipos son funciones:
+$\{S \equiv S_1 \to S_2\}$ y $\{T \equiv T_1 \to T_2\}$. Realiza la
+unificación con el conjunto $C'$ unido con dos restricciones más: el
+tipo $S_1 \equiv T_1$ y $S_2 \equiv T_2$.
+
+En la línea 14, el algoritmo llega si ninguna de la anteriores
+condiciones se cumple, por lo tanto no puede unificar y falla.
+
+\section{Lenguajes de tipos}\label{sec:lenguajetipos}
+
+Uno de los elementos que requiere el algoritmo de unificación
+son los tipos de datos $\tau$:
+
+\[
+  \begin{array}[h]{rcl}
+    \tau & \to_1  & X \in Var \\
+         & \mid_2 & \text{Int} \\
+         & \mid_3 & \text{Bool} \\
+         & \mid_4 & \tau_1 \to \tau_2 \\
+  \end{array}
+\]
+
+En la primera producción un tipo es una variable $X$ que pertenece al
+conjunto de variables $Var$ (ver~\ref{sec:var}). La segunda producción
+identifica que el tipo es un entero $\text{Int}$. La tercera
+producción indica que es un tipo booleano $\text{Bool}$. La cuarta y
+última, indica que el tipo es una función que recibe un tipo $\tau_1$ y
+retorna un tipo $\tau_2$.
+
+\subsection{Ejemplos de tipos}
+\label{sec:ejemtipos}
+
+Los tipos básicos son: enteros $\text{Int}$, booleanos $\text{Bool}$ y
+variables de tipos $\text{Var}$. Ejemplos de los tipos simples:
+
+\[
+  \begin{array}[h]{cl}
+    \text{Int} & \text{Un entero} \\
+    \text{Bool} & \text{Un booleano} \\
+    \text{a} & \text{Una variable} \\
+    \text{bcd1} & \text{Una variable} \\
+  \end{array}
+\]
+
+Los tipos funciones permite construir tipos a partir de los más
+sencillos:
+
+\[
+  \begin{array}[h]{cl}
+    \text{Int} \to \text{Int} & \text{Función que toma un entero y retorna un entero} \\
+    \text{Int} \to \text{Int} \to \text{Int} & \text{Un operador binario:} +\ -\ \times\ \\
+    \text{Int} \to \text{Bool} & \text{Toma un entero y verifica una propiedad en él} \\
+    \text{a} \to \text{Int} & \text{Una función polimorfica que convierte a entero} \\
+    \text{a} \to \text{a} \to \text{a} & \text{Un operador binario genérico} \\
+  \end{array}
+\]
+
+\section{Estructura de datos}\label{sec:estructdatos}
+
+A continuación se muestra una descripción de los tipos de datos
+utilizados por la función $unify$ y sus funciones auxiliares
+(ver~\ref{sec:funaux}).
+
+\subsection{Variables}
+\label{sec:var}
+
+La variables son cualquier cadena de carácteres que comienza con una letra,
+seguida de una secuencia posiblemente vacía de letras y números. Su expresión
+regular:
+
+\[
+  [a..zA..Z]([a..zA..Z] \mid [0 ..\ 9])^*
+\]
+
+\subsection{Tipos}
+\label{sec:estrutipos}
+
+Los tipos definidos en \ref{sec:lenguajetipos} deben ser definidos
+como una estructura de datos. Esta estructura debe ser capaz de
+representar cualquiera de los cuatro elementos que consta un tipo $\tau$.
+
+\subsection{Restricción}
+\label{sec:estrurest}
+
+Una restricción es un par ordenado de tipos $(S,T)$ donde $T \in \tau$
+y $S \in \tau$.
+
+\subsection{Sustitución}
+\label{sec:estrsust}
+
+Una sustitución es un par ordenado de tipos $(X,T)$ donde $X \in Var$ y
+$T \in \tau$. O también la sustitución puede ser definida como una
+función:
+
+\[
+  \theta :: \tau -> \tau.
+\]
+
+Es una función que recibe un tipo y lo tranforma en otro tipo.
+
+\subsection{Conjuntos}
+\label{sec:conjuntos}
+
+Existen dos tipo de conjuntos: uno de restricciones $C$ y otro de
+sustituciones $\Theta$.
+
+
+\section{Funciones auxiliares}
+\label{sec:funaux}
+
+Existe una serie de funciones auxilares que son necesarias que el
+algoritmo de $unify$.
+
+\subsection{Variables libres, \emph{Free Variables} ($FV$) }
+\label{sec:fv}
+
+La función $FV$ recibe un tipo de dato y retorna un conjunto de
+variables que son están definidas dentro del tipo:
+
+\[
+  FV(T) =
+  \begin{cases}
+    \{X\}, & \text{si $T = X$ donde $X$ es una variable} \\
+    \emptyset & \text{si $T = \text{Int}$} \\
+    \emptyset & \text{si $T = \text{Int}$} \\
+    FV(\tau_1) \cup FV(\tau_2) & \text{si $T = \tau_1 \to \tau_2$} \\
+  \end{cases}
+\]
+
+\subsection{Aplicación de la sustitución}
+\label{sec:aplsus}
+
+La aplicación $\alpha$ de una sustitición es una operación
+que está divida en varia sub-operaciones: en primer lugar
+la aplicación de la sustitución en un conjunto de restricciones:
+
+\[
+  \alpha :: \theta \to C \to C
+\]
+
+Toma una sustitución se la aplica a cada elemento del conjunto de
+restricciones y produce un nuevo conjunto de restricciones. Esta
+sustitución $\alpha$ está definida de la siguiente forma:
+
+\[
+  \alpha =
+  \begin{cases}
+    \emptyset & C = \emptyset \\
+    \{\alpha\  \theta\  c\} \cup\ \alpha\ \theta\ C' & C = \{c\} \cup C' \\
+  \end{cases}
+\]
+
+Esta aplicación está basada en otra aplicación de sustitución sobre
+una restricción $\rho = \{ S \equiv T \}$, donde $S \in \tau$ y $T \in
+\tau$:
+
+\[
+  \alpha :: \theta \to \rho \to \rho
+\]
+
+y está definida como:
+
+\[
+  \alpha = \{(\alpha\ \theta\ S) \equiv (\alpha\ \theta\ T)\}
+\]
+
+Esta aplicación también está basada en otra aplicación $\alpha$ pero
+sobre tipos sobre los tipos:
+
+\[
+  \alpha = \theta \to \tau \to \tau
+\]
+
+Si la sustitución $\theta$ es definido como $[ X' \mapsto S']$,
+entonces la aplicación $\alpha$ está definida como:
+
+\[
+  \alpha\ \theta\ \tau =
+  \begin{cases}
+    X & \text{si $\tau = X$ y $X \neq X'$} \\
+    S' & \text{si $\tau = X$ y $X = X'$} \\
+    \text{Int} & \text{si $\tau = \text{Int}$} \\
+    \text{Bool} & \text{si $\tau = \text{Bool}$} \\
+    (\alpha\ \theta\ \tau_1)\ \to (\alpha\ \theta\  \tau_2) & \text{si $\tau = \tau_1 \to \tau_2$} \\
+  \end{cases}
+\]
+
+\subsection{Composición de sustituciones}
+\label{sec:compsus}
+
+La composición ($\circ$) de sustituciones se puede definir de dos
+formas. Primero, si la sustitución está definida como un par ordenado
+la composición es una función que toma un conjunto de sustituciones
+$\Theta$ y una sustitución $\theta$ y adiciona está última al conjunto
+de sustituciones.
+
+Segundo, si la sustitucion está definida como una
+función, se puede utilizando el operador de composición de funciones,
+que toma dos sustituciones y produce una nueva.
+
+\section{Gramática de entrada}
+\label{sec:gramatica-de-entrada}
+
+La siguiente es la definición de la gramática de entrada:
+
+\[
+  \begin{array}[h]{rcl}
+    Entrada & \to  & ListaEquiv EOF \\
+    ListaEquiv & \to & \tau = \tau\ EOL\ ListaEquiv\\
+            & \to & \epsilon \\
+    \tau    & \to & VAR \\
+            & \to & int \\
+            & \to & bool \\
+            & \to & \tau \to \tau \\
+            & \to & (\tau) \\
+  \end{array}
+\]
+
+Donde \texttt{EOF} es final de fichero, \texttt{EOL} es el carácter de
+línea nueva\footnote{En la plataforma cygwin-Windows equivale al
+  caracter cuyo valor numérico es 10.}.
+
+\textbf{Ejemplo:}
+
+De una entrada correcta
+
+\begin{alltt}
+a = a <EOL>
+int = int <EOL>
+a -> a = int -> int <EOL>
+(a -> a) -> b = (int -> int) -> int <EOL>
+<EOF>
+\end{alltt}
+
+La entrada muestra un programa de 4 líneas de tipos que será
+verificados si son equivalentes o no. Los símbolos \verb!<EOL>! y
+\verb!<EOF>! se refieren a la línea nueva y al final del fichero, el
+primer caracter es visible y el segundo es simple un evento.
+\section{Requerimientos}
+\label{sec:requerimientos}
+
+
+
+
+\subsection{Técnicos}
+\label{sec:reqtec}
+
+\begin{description}
+\item[Lenguajes de programación:] C++
+\item[Nombre ejecutable:] cppunify
+\item[Control de versiones:] Se va utilizar el manejador de versiones \emph{subversion} \cite{pilato}.
+\item[Repositorio de control de versiones:] Riouxsvn (\url{http://www.riouxsvn.com}).
+\item[Estructura de directorios:] La siguiente la estructura de
+  directorios o carpetas o \emph{folders} que tendrá el repositorio, donde
+  \texttt{+} es un directorio y \texttt{-} es un archivo.
+\begin{alltt}
+\end{alltt}
+
+  \texttt{miembros.xml} archivo que contiene la definición de los
+  miembros del grupo. El siguiente es el contenido de un posible grupo.
+
+  {\footnotesize
+\begin{alltt}
+<grupo>
+   <nombre>UnificadorSupremo</nombre>
+   <url>https://subversion.assembla.com/svn/unificador/</url>
+   <miembro>
+      <nombre>Juan Francisco Cardona McCormick</nombre>
+      <codigo>198610250010</codigo>
+      <email>fcardona@eafit.edu.co</email>
+   </miembro>
+   <miembro>
+      <nombre>Alejandro Gómez Londoño</nombre>
+      <codigo>201010001010</codigo>
+      <email>alegomez544@eafit.edu.co</email>
+   </miembro>
+</grupo>
+\end{alltt}
+  }
+
+  El \emph{\texttt{url}} identifica el repositorio donde está
+  almacenada la práctica.  El nombre del grupo es de una sola palabra,
+  en minúsculas. Se debe añadir el correo electrónico en la segunda
+  entrega. \emph{\texttt{mainclases}} es una lista con las clases
+  principales del proyecto tanto para ANTRL como para CUP.
+
+  El \texttt{$<$NombreGrupo$>$} es el nombre elegido para su grupo un identificador que
+  sigue el mismo formato de los identificadores en Java.
+
+  El fichero\texttt{README} contiene la información del contenido de las
+  sub-capertas y como compilar cada proyecto.
+
+  Los directorios \texttt{src-[leng]$_i$} son los directorios que
+  contienen los fuentes de cada uno de los lenguajes que han hecho las
+  versiones de la práctica:
+  \[
+    \text{[leng]} \to \text{cplusplus} \mid \text{csharp} \mid \text{clisp} \mid \text{haskell}
+  \]
+
+  El directorio \texttt{examples} contiene los diferentes ejemplos con
+  los cuales corren la práctica.
+
+\end{description}
+
+\subsection{Administrativos}
+\label{sec:admin}
+
+\begin{description}
+\item[Grupo de trabajo:] Grupo máximo de dos estudiantes. \emph{Cada}
+  miembro del equipo debe registrarse en assembla
+  (\url{http://www.assembla.com}) con un usuario propio. Uno de los
+  miembros debe crear un repositorio donde los miembros del equipo son
+  los dueños del repositorio. Deben enviar una invitación al monitor
+  de la materia y al profesor de la misma.
+\item[Primera entrega:] Viernes 26 de Octubre a las 12:00 m. Esta se
+  hará automática a través del sistema de control de versiones. Se
+  \emph{debe} cumplir todos los requerimientos señalados en este
+  documento. Recuerde que la idea es entregar una gramática en el
+  archivo de las gramáticas.
+\item[Control de versiones:] El control de versiones no es solamente
+  un herramienta que facilite la comunicación entre los miembros del
+  grupo y del control de versiones, sino que también ayudará al
+  profesor a llevar un control sobre el desarrollo de la práctica. Se
+  espera que las diferentes registros dentro del control de versiones
+  sean cambios graduales. En caso contrario, se procederá a realizar
+  un escutrinio a fondo del manejo de control de versiones para evitar
+  fraudes.
+\end{description}
+
+\renewcommand{\refname}{Bibliografía}
+
+\begin{thebibliography}{9}
+\bibitem{arnold} Arnold, Ken. Gosling, James. \emph{The Java
+    Programming Language}. 2005.
+\bibitem{hindley} Hindley, J. Roger. The principal type-scheme of an
+  object in combinatory logic. \emph{Transactions of the American
+    Mathematical Societe}, 146:29-60. 1969.
+\bibitem{pierce} Pierce, Benjamin C. \emph{Type and Programming Languages}. The MIT Press. 2002.
+\bibitem{pilato} Pilato, Michael C. Collins-Sussman, Ben. Fitzpatrick, Brian W. \emph{Version Control with Subversion}. 2008.
+\bibitem{robinson} Robinson, J. Alan. Computational logic: The unification computation. \emph{Machine Intelligence}, 6:63-72, 1971.
+  % \bibitem{louden} Louden, Kenneth C. Lenguajes de programación. Principios y práctica. (2003), 87--91.
+
+\end{thebibliography}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
