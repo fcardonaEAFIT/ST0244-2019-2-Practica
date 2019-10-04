@@ -113,6 +113,11 @@ inproceedings,%
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperref stuff
+
+\hypersetup{colorlinks=true}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mathematics stuff
 \theoremstyle{definition}
 \newtheorem{example}{Ejemplo}[section]
@@ -311,9 +316,10 @@ regular:
 \subsection{Tipos}
 \label{sec:estrutipos}
 
-Los tipos definidos en \ref{sec:lenguajetipos} deben ser definidos
-como una estructura de datos. Esta estructura debe ser capaz de
-representar cualquiera de los cuatro elementos que consta un tipo $\tau$.
+Los tipos definidos en la sección~\ref{sec:lenguajetipos} deben ser
+definidos como una estructura de datos. Esta estructura debe ser capaz
+de representar cualquiera de los cuatro elementos que consta un tipo
+$\tau$.
 
 \subsection{Restricción}
 \label{sec:estrurest}
@@ -436,15 +442,27 @@ La siguiente es la definición de la gramática de entrada:
 
 \[
   \begin{array}[h]{rcl}
-    Entrada & \to  & ListaEquiv EOF \\
-    ListaEquiv & \to & Tipo = Tipo\ EOL\ ListaEquiv\\
-            & \to & \epsilon \\
-    Tipo    & \to & VAR\  TipoRest\\
-            & \mid & int\ TipoRest\\
-            & \mid & bool\ TipoRest \\
-            & \mid & (\ Tipo\ ) \\
-    TipoRest & \to & \text{-$>$}\ Tipo \\
-             & \mid & \epsilon \\
+    \text{Entrada} & \to  & \text{ListaEquiv} \texttt{EOF}
+    \\
+    \\
+    \text{ListaEquiv} & \to & \text{Tipo} = \text{Tipo}\ \texttt{EOL}\
+                              \text{ListaEquiv}
+    \\
+                   & \to & \epsilon
+    \\
+    \\
+    \text{Tipo}    & \to & \text{VAR}\  \text{TipoRest}
+    \\
+                   & \mid & \text{int}\ \text{TipoRest}
+    \\
+                   & \mid & \text{bool}\ \text{TipoRest}
+    \\
+                   & \mid & (\ \text{Tipo} \ )
+    \\
+    \\
+    \text{TipoRest} & \to & \text{-$>$}\ \text{Tipo}
+    \\
+                   & \mid & \epsilon
   \end{array}
 \]
 
@@ -463,9 +481,9 @@ a -> a = int -> int <EOL>
 <EOF>
 \end{alltt}
 
-La entrada muestra un programa de 4 líneas de tipos que será
-verificados si son equivalentes o no. Los símbolos \verb!<EOL>! y
-\verb!<EOF>! se refieren a la línea nueva y al final del fichero, el
+La entrada muestra un programa de~4 líneas de tipos que será
+verificados si son equivalentes o no. Los símbolos \texttt{EOL} y
+\texttt{EOF} se refieren a la línea nueva y al final del fichero, el
 primer caracter es visible y el segundo es simple un evento.
 \end{example}
 
