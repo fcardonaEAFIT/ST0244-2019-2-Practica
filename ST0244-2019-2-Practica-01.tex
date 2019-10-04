@@ -13,7 +13,22 @@
 % \usepackage{algorithm}
 % \usepackage{algorithmc}
 \usepackage[ruled,vlined]{algorithm2e}
+\usepackage[%
+backend=biber,%
+backref=true,%
+bibstyle=authoryear,%
+citestyle=authoryear-comp,%
+giveninits=true,%
+maxbibnames=4,%
+maxcitenames=8,%
+sorting=ynt,%
+uniquename=init,%
+]{biblatex}
+\usepackage{csquotes}
 \usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Layout
 
 \newcommand{\TI}[1]{\text{\textit{#1}}}
 \newcommand{\TC}[1]{\text{'\textbf{#1}'}}
@@ -21,13 +36,92 @@
 \newcommand{\TP}[1]{'\mathbf{#1}'}
 \newcommand{\UNUMBER}[1]{\begin{math}_{#1}\end{math}}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Biblatex stuff
+
+\addbibresource{ST0244-2019-2-Practica-01.bib}
+
+% Remove quotes from the title.
+\DeclareFieldFormat%
+  [article,%
+  incollection,%
+  inproceedings,%
+  thesis,% works for mastersthesis and phdthesis
+  unpublished,%
+  ]{title}{#1}
+
+% Remove the quotes from the title in \citetext. The star version is
+% used to redefine citetitle for all entry types. (see
+% http://tex.stackexchange.com/questions/122665/suppress-quotes-or-other-markup-in-citetitle)
+% \DeclareFieldFormat*{citetitle}{#1}
+
+% Remove "In:" before journal names.
+%
+% From
+% http://tex.stackexchange.com/questions/10682/suppress-in-biblatex
+\renewbibmacro{in:}{%
+  \ifentrytype{article}{}{\printtext{\bibstring{in}\intitlepunct}}}
+
+% Remove italics from the title names.
+\DeclareFieldFormat%
+ [book,%
+ misc,%
+ online,%
+ report,%
+ ]{title}{#1}
+
+% Remove italics from journal names.
+\DeclareFieldFormat{journaltitle}{#1}
+
+% Remove italics from proceedings names in articles in proceedings.
+\DeclareFieldFormat%
+[incollection,%
+inproceedings,%
+]{booktitle}{#1}
+
+% Remove markup in \citetitle.
+%
+% From:
+% https://tex.stackexchange.com/questions/122665/suppress-quotes-or-other-markup-in-citetitle/387845.
+\DeclareFieldFormat*{citetitle}{#1}
+
+% Remove the url field from some entry types.
+% \DeclareFieldFormat[article,thesis]{url}{}
+
+% All authors are printed as "last name – first name".
+\DeclareNameAlias{sortname}{family-given}
+
+% All editors are printed as "last name – first name".
+\DeclareNameAlias{default}{family-given}
+
+% Using square brackets with authoryear citestyle. From:
+% http://tex.stackexchange.com/questions/16765/biblatex-author-year-square-brackets
+\makeatletter
+
+\newrobustcmd*{\parentexttrack}[1]{%
+  \begingroup
+  \blx@blxinit
+  \blx@setsfcodes
+  \blx@bibopenparen#1\blx@bibcloseparen
+  \endgroup}
+
+\AtEveryCite{%
+  \let\parentext=\parentexttrack%
+  \let\bibopenparen=\bibopenbracket%
+  \let\bibcloseparen=\bibclosebracket}
+
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mathematics stuff
+\theoremstyle{definition}
+\newtheorem{example}{Ejemplo}[section]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Primera práctica de lenguajes de programación\\Algoritmo de unificación\\Implementación en C++}
 \date{26 de Septiembre de 2019}
 \author{Edwin Andrey Duque Loaiza\\Andrés Sicard Ramírez\\Edison Valencia Díaz\\Juan Francisco Cardona Mc'Cormick}
 
-
-\theoremstyle{definition}
-\newtheorem{example}{Ejemplo}[section]
 
 \begin{document}
 \maketitle{}
@@ -61,7 +155,7 @@ ecuación, lo que nos produce:
   \text{Int} \to \text{Int} \equiv \text{Int} \to \text{Int}.
 \end{equation*}
 
-Robinson~\cite{robinson} definió un algoritmo llamado de unificación
+\textcite{robinson-1971} definió un algoritmo llamado de unificación
 que permite solucionar este tipo de problemas. En los cuales recibe
 una serie de restricciones de la forma $T \equiv S$ y encuentra un
 conjunto de sustituciones que permite transformar un tipo en el
@@ -70,8 +164,8 @@ otro. El algoritmo de unificación para los tipos de datos sirve para
 
 \section{Algoritmo}\label{sec:algoritmo}
 
-El algoritmo~\ref{alg:unificacion} es una copia del encontrado en el
-libro de Pierce~\cite{pierce}.
+El algoritmo~\ref{alg:unificacion} es tomado de
+\textcite{pierce-2002}.
 
 \begin{algorithm}[h!]
   \DontPrintSemicolon
@@ -385,7 +479,9 @@ primer caracter es visible y el segundo es simple un evento.
 \begin{description}
 \item[Lenguajes de programación:] C++
 \item[Nombre ejecutable:] cppunify
-\item[Control de versiones:] Se va utilizar el manejador de versiones \emph{subversion} \cite{pilato}.
+\item[Control de versiones:] Se va utilizar el manejador de versiones
+  \emph{subversion}
+  \parencite{collins-sussman--fitzpatrick-pilato-2011}.
 \item[Repositorio de control de versiones:] Riouxsvn (\url{http://www.riouxsvn.com}).
 \item[Estructura de directorios:] La siguiente la estructura de
   directorios o carpetas o \emph{folders} que tendrá el repositorio, donde
@@ -466,30 +562,34 @@ primer caracter es visible y el segundo es simple un evento.
   fraudes.
 \end{description}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% References
+
 \renewcommand{\refname}{Bibliografía}
+\newrefcontext[sorting=nyt]
+\printbibliography[]
 
-\begin{thebibliography}{9}
-\bibitem{arnold} Arnold, Ken. Gosling, James. \emph{The Java
-    Programming Language}. 2005.
 
-\bibitem{hindley} Hindley, J. Roger. The principal type-scheme of an
-  object in combinatory logic. \emph{Transactions of the American
-    Mathematical Society}, 146:29-60. 1969.
 
-\bibitem{pierce} Pierce, Benjamin C. \emph{Type and Programming
-    Languages}. The MIT Press. 2002.
+% \begin{thebibliography}{9}
+% \bibitem{arnold} Arnold, Ken. Gosling, James. \emph{The Java
+%     Programming Language}. 2005.
 
-\bibitem{pilato} Pilato, Michael C. Collins-Sussman, Ben. Fitzpatrick,
-  Brian W. \emph{Version Control with Subversion}. 2008.
+% \bibitem{hindley} Hindley, J. Roger. The principal type-scheme of an
+%   object in combinatory logic. \emph{Transactions of the American
+%     Mathematical Society}, 146:29-60. 1969.
 
-\bibitem{robinson} Robinson, J. Alan. Computational logic: The
-  unification computation. \emph{Machine Intelligence}, 6:63-72, 1971.
+% \bibitem{pierce} Pierce, Benjamin C. \emph{Type and Programming
+%     Languages}. The MIT Press. 2002.
+
+% \bibitem{pilato} Pilato, Michael C. Collins-Sussman, Ben. Fitzpatrick,
+%   Brian W. \emph{Version Control with Subversion}. 2008.
+
+% \bibitem{robinson} Robinson, J. Alan. Computational logic: The
+%   unification computation. \emph{Machine Intelligence}, 6:63-72, 1971.
 
 % \bibitem{louden} Louden, Kenneth C. Lenguajes de
 %   programación. Principios y práctica. (2003), 87--91.
-
-\end{thebibliography}
-
 
 \end{document}
 
