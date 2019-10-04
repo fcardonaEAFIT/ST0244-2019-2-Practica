@@ -41,6 +41,10 @@ uniquename=init,%
 
 \addbibresource{ST0244-2019-2-Practica-01.bib}
 
+\DefineBibliographyStrings{spanish}{%
+  references = {Bibliografía},
+}
+
 % Remove quotes from the title.
 \DeclareFieldFormat%
   [article,%
@@ -591,9 +595,8 @@ primer caracter es visible y el segundo es simple un evento.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % References
 
-\renewcommand{\refname}{Bibliografía}
 \newrefcontext[sorting=nyt]
-\printbibliography[]
+\printbibliography[heading=bibintoc]
 
 \end{document}
 
