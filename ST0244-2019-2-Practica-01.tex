@@ -6,6 +6,7 @@
 \usepackage[spanish]{babel}
 \usepackage{amssymb,latexsym}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{verbatim}
 \usepackage{alltt}
 \usepackage{url}
@@ -23,6 +24,10 @@
 \title{Primera práctica de lenguajes de programación\\Algoritmo de unificación\\Implementación en C++}
 \date{26 de Septiembre de 2019}
 \author{Edwin Andrey Duque Loaiza\\Andrés Sicard Ramírez\\Edison Valencia Díaz\\Juan Francisco Cardona Mc'Cormick}
+
+
+\theoremstyle{definition}
+\newtheorem{example}{Ejemplo}[section]
 
 \begin{document}
 \maketitle{}
@@ -174,7 +179,7 @@ y retorna un tipo $\tau_2$.
 \label{sec:ejemtipos}
 
 Los tipos básicos son: enteros $\text{Int}$, booleanos $\text{Bool}$ y
-variables de tipos $\text{Var}$. Ejemplos de los tipos simples:
+variables de tipos $Var$. Ejemplos de los tipos simples:
 
 \[
   \begin{array}[h]{cl}
@@ -192,7 +197,7 @@ sencillos:
   \begin{array}[h]{cl}
     \text{Int} \to \text{Int} & \text{Función que toma un entero y retorna un entero} \\
     \text{Int} \to \text{Int} \to \text{Int} & \text{Un operador binario:} +\ -\ \times\ \\
-    \text{Int} \to \text{Bool} & \text{Toma un entero y verifica una propiedad en él} \\
+    \text{Int} \to \text{Bool} & \text{Función que toma un entero y verifica una propiedad en él} \\
     \text{a} \to \text{Int} & \text{Una función polimorfica que convierte a entero} \\
     \text{a} \to \text{a} \to \text{a} & \text{Un operador binario genérico} \\
   \end{array}
@@ -245,14 +250,14 @@ transforma en otro tipo.
 \subsection{Conjuntos}
 \label{sec:conjuntos}
 
-Existen dos tipo de conjuntos: uno de restricciones~$C$ y otro de
+Existen dos tipos de conjuntos: uno de restricciones~$C$ y otro de
 sustituciones~$\Theta$.
 
 
 \section{Funciones auxiliares}
 \label{sec:funaux}
 
-Existe una serie de funciones auxilares que son necesarias que el
+Existe una serie de funciones auxilares que son necesarias en el
 algoritmo de $unify$.
 
 \subsection{Variables libres, \emph{Free Variables} ($FV$) }
@@ -274,9 +279,9 @@ variables que son están definidas dentro del tipo:
 \subsection{Aplicación de la sustitución}
 \label{sec:aplsus}
 
-La aplicación $\alpha$ de una sustitición es una operación
-que está divida en varia sub-operaciones: en primer lugar
-la aplicación de la sustitución en un conjunto de restricciones:
+La aplicación $\alpha$ de una sustitición es una operación que está
+divida en varias sub-operaciones: en primer lugar la aplicación de la
+sustitución en un conjunto de restricciones:
 
 \[
   \alpha :: \theta \to C \to C
@@ -361,13 +366,12 @@ La siguiente es la definición de la gramática de entrada:
   \end{array}
 \]
 
-Donde \texttt{EOF} es final de fichero, \texttt{EOL} es el carácter de
-línea nueva\footnote{En la plataforma cygwin-Windows equivale al
-  caracter cuyo valor numérico es 10.}.
+donde \texttt{EOF} es final de fichero y \texttt{EOL} es el carácter
+de línea nueva\footnote{En la plataforma cygwin-Windows equivale al
+  caracter cuyo valor numérico es~10.}.
 
-\textbf{Ejemplo:}
-
-De una entrada correcta
+\begin{example}
+Una entrada correcta es la siguiente:
 
 \begin{alltt}
 a = a <EOL>
@@ -381,6 +385,8 @@ La entrada muestra un programa de 4 líneas de tipos que será
 verificados si son equivalentes o no. Los símbolos \verb!<EOL>! y
 \verb!<EOF>! se refieren a la línea nueva y al final del fichero, el
 primer caracter es visible y el segundo es simple un evento.
+\end{example}
+
 \section{Requerimientos}
 \label{sec:requerimientos}
 
