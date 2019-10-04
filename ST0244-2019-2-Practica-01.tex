@@ -196,7 +196,7 @@ El algoritmo~\ref{alg:unificacion} es tomado de
   \DontPrintSemicolon
   \LinesNumbered
   \KwData{$C = \{(S \equiv T) \mid S \in \text{Type} \wedge T \in \text{Type} \}$ }
-  \KwResult{$\Theta = \{(X \mapsto T) \mid X \in Var \wedge T \in \text{Type}\}$ }
+  \KwResult{$\Theta = \{(X \mapsto T) \mid X \in \text{Var} \wedge T \in \text{Type}\}$ }
   \Begin{
     \If {$C = \emptyset$}{
       $[\ ]$\;
@@ -228,8 +228,8 @@ cada restricción es un par ordenado de la forma $\{ S = T \}$ y cada
 elemento del par ordenado es un tipo (ver
 sección~\ref{sec:lenguajetipos}). El algoritmo retorna un conjunto de
 sustituciones $\Theta$ y cada sustitución es de la forma
-$\{ X \mapsto T\}$, donde $X \in Var$ es una variable y $T$ es un tipo
-(ver sección~\ref{sec:lenguajetipos}).
+$\{ X \mapsto T\}$, donde $X \in \text{Var}$ es una variable y $T$ es
+un tipo (ver sección~\ref{sec:lenguajetipos}).
 
 En la línea~2, el algoritmo verifica si el conjunto de
 restricciones~$C$ es vacío y retorna un conjunto~$\Theta$ también
@@ -272,50 +272,64 @@ condiciones se cumple, por lo tanto no puede unificar y falla.
 
 Uno de los elementos que requiere el algoritmo de unificación
 son los tipos de datos $\tau$:
-
-\[
+\begin{equation*}
   \begin{array}[h]{rcl}
-    \tau & \to_1  & X \in Var \\
-         & \mid_2 & \text{Int} \\
-         & \mid_3 & \text{Bool} \\
-         & \mid_4 & \tau_1 \to \tau_2 \\
-  \end{array}
-\]
+    \tau & \to_1  & X \in \text{Var}
+    \\
+         & \mid_2 & \text{Int}
+    \\
+         & \mid_3 & \text{Bool}
+    \\
+         & \mid_4 & \tau_1 \to \tau_2
+   \end{array}
+\end{equation*}
+
 
 En la primera producción un tipo es una variable $X$ que pertenece al
-conjunto de variables $Var$ (ver sección~\ref{sec:var}). La segunda
-producción indica que el tipo es un entero $\text{Int}$. La tercera
-producción indica que es un tipo booleano $\text{Bool}$. La cuarta y
-última, indica que el tipo es una función que recibe un tipo $\tau_1$
-y retorna un tipo $\tau_2$.
+conjunto de variables $\text{Var}$ (ver sección~\ref{sec:var}). La
+segunda producción indica que el tipo es un entero $\text{Int}$. La
+tercera producción indica que es un tipo booleano $\text{Bool}$. La
+cuarta y última, indica que el tipo es una función que recibe un tipo
+$\tau_1$ y retorna un tipo $\tau_2$.
 
-\subsection{Ejemplos de tipos}
-\label{sec:ejemtipos}
-
+\begin{example}
 Los tipos básicos son: enteros $\text{Int}$, booleanos $\text{Bool}$ y
-variables de tipos $Var$. Ejemplos de los tipos simples:
+variables de tipos $\text{Var}$. Ejemplos de los tipos simples:
 
-\[
+\begin{equation*}
   \begin{array}[h]{cl}
-    \text{Int} & \text{Un entero} \\
-    \text{Bool} & \text{Un booleano} \\
-    \text{a} & \text{Una variable} \\
-    \text{bcd1} & \text{Una variable} \\
+    \text{Int} & \text{Un entero}
+    \\
+    \text{Bool} & \text{Un booleano}
+    \\
+    \text{a} & \text{Una variable}
+    \\
+    \text{bcd1} & \text{Una variable}
   \end{array}
-\]
+\end{equation*}
 
 Los tipos funciones permite construir tipos a partir de los más
 sencillos:
 
-\[
+\begin{equation*}
   \begin{array}[h]{cl}
-    \text{Int} \to \text{Int} & \text{Función que toma un entero y retorna un entero} \\
-    \text{Int} \to \text{Int} \to \text{Int} & \text{Un operador binario:} +\ -\ \times\ \\
-    \text{Int} \to \text{Bool} & \text{Función que toma un entero y verifica una propiedad en él} \\
-    \text{a} \to \text{Int} & \text{Una función polimorfica que convierte a entero} \\
-    \text{a} \to \text{a} \to \text{a} & \text{Un operador binario genérico} \\
+    \text{Int} \to \text{Int} & \text{Función que toma un entero y
+                                retorna un entero}
+    \\
+    \text{Int} \to \text{Int} \to \text{Int} & \text{Un operador
+                                               binario:} +\ -\ \times
+    \\
+    \text{Int} \to \text{Bool} & \text{Función que toma un entero y
+                                 verifica una propiedad en él}
+    \\
+    \text{a} \to \text{Int} & \text{Una función polimorfica que
+                              convierte a entero}
+    \\
+    \text{a} \to \text{a} \to \text{a} & \text{Un operador binario
+                                         genérico}
   \end{array}
-\]
+\end{equation*}
+\end{example}
 
 \section{Estructura de datos}\label{sec:estructdatos}
 
@@ -350,9 +364,9 @@ y $S \in \tau$.
 \subsection{Sustitución}
 \label{sec:estrsust}
 
-Una sustitución es un par ordenado de tipos $(X,T)$ donde $X \in Var$
-y $T \in \tau$. O también una sustitución puede ser definida como una
-función
+Una sustitución es un par ordenado de tipos $(X,T)$ donde
+$X \in \text{Var}$ y $T \in \tau$. O también una sustitución puede ser
+definida como una función
 \begin{equation*}
   \theta : \tau \to \tau.
 \end{equation*}
@@ -395,7 +409,7 @@ La aplicación $\alpha$ de una sustitución es una operación que está
 divida en varias sub-operaciones: en primer lugar la aplicación de la
 sustitución en un conjunto de restricciones:
 \begin{equation*}
-  \alpha :: \theta \to C \to C.
+  \alpha : \theta \to C \to C.
 \end{equation*}
 Toma una sustitución se la aplica a cada elemento del conjunto de
 restricciones y produce un nuevo conjunto de restricciones. Esta
@@ -403,17 +417,17 @@ sustitución $\alpha$ está definida de la siguiente forma:
 \begin{equation*}
   \alpha =
   \begin{cases}
-    \emptyset, & C = \emptyset;
+    \emptyset, & \text{si} \; C = \emptyset;
     \\
-    \{\alpha\  \theta\  c\} \cup\ \alpha\ \theta\ C', & C = \{c\} \cup
-    C'.
+    \{\alpha\ \theta\ c\} \cup\ \alpha\ \theta\ C', & \text{si} \; C =
+    \{c\} \cup C'.
   \end{cases}
 \end{equation*}
 Esta aplicación está basada en otra aplicación de sustitución sobre
 una restricción $\rho = \{ S \equiv T \}$, donde $S \in \tau$ y $T \in
 \tau$:
 \begin{equation*}
-  \alpha :: \theta \to \rho \to \rho,
+  \alpha : \theta \to \rho \to \rho,
 \end{equation*}
 y está definida como:
 \begin{equation*}
