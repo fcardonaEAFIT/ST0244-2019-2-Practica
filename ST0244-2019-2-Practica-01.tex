@@ -119,6 +119,14 @@ inproceedings,%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mathematics stuff
+
+\newcommand{\mb}[1]{\mathbf{#1}}
+% \newcommand{\mbb}[1]{\mathbb{#1}}
+\newcommand{\mc}[1]{{\mathcal{#1}}}
+\newcommand{\mf}[1]{\mathfrak{#1}} % Requires \usepackage{amssymb}
+\newcommand{\mr}[1]{\mathrm{#1}}
+\newcommand{\ms}[1]{\mathsf{#1}}
+
 \theoremstyle{definition}
 \newtheorem{example}{Ejemplo}[section]
 
@@ -175,8 +183,8 @@ El algoritmo~\ref{alg:unificacion} es tomado de
 \begin{algorithm}[h!]
   \DontPrintSemicolon
   \LinesNumbered
-  \KwData{$C = \{(S \equiv T) \mid S \in Type \wedge T \in Type \}$ }
-  \KwResult{$\Theta = \{(X \mapsto T) \mid X \in Var \wedge T \in Type\}$ }
+  \KwData{$C = \{(S \equiv T) \mid S \in \text{Type} \wedge T \in \text{Type} \}$ }
+  \KwResult{$\Theta = \{(X \mapsto T) \mid X \in Var \wedge T \in \text{Type}\}$ }
   \Begin{
     \If {$C = \emptyset$}{
       $[\ ]$\;
@@ -184,23 +192,23 @@ El algoritmo~\ref{alg:unificacion} es tomado de
     \Else{
       \textbf{let} $\{S \equiv T\} \cup C' = C$ \textbf{in}
       \If{$S = T$}{
-        $unify(C')$;
+        $\ms{unify}(C')$;
       }
       \ElseIf{$S = X\ \text{\textbf{and}}\  X \notin FV(T)$}{
-        $unify([X \mapsto T]C') \circ [X \mapsto T]$;
+        $\ms{unify}([X \mapsto T]C') \circ [X \mapsto T]$;
       }
       \ElseIf{$T = X\ \text{\textbf{and}}\  X \notin FV(T)$}{
-        $unify([X \mapsto S]C') \circ [X \mapsto S]$;
+        $\ms{unify}([X \mapsto S]C') \circ [X \mapsto S]$;
       }
       \ElseIf{$S \equiv S_1 \to S_2\ \text{\textbf{and}}\ T \equiv T_1 \to T_2$}{
-        $unify(C' \cup \{S_1 \equiv T_1, S_2 \equiv T_2\})$;
+        $\ms{unify}(C' \cup \{S_1 \equiv T_1, S_2 \equiv T_2\})$;
       }
       \Else{
         \emph{fail};
       }
     }
   }
-  \caption{$unify(C)$}\label{alg:unificacion}
+  \caption{$\ms{unify}(C)$}\label{alg:unificacion}
 \end{algorithm}
 
 El algoritmo toma como entrada un conjunto de restricciones $C$, donde
@@ -300,7 +308,7 @@ sencillos:
 \section{Estructura de datos}\label{sec:estructdatos}
 
 A continuación se muestra una descripción de los tipos de datos
-utilizados por la función $unify$ y sus funciones auxiliares (ver
+utilizados por la función $\ms{unify}$ y sus funciones auxiliares (ver
 sección~\ref{sec:funaux}).
 
 \subsection{Variables}
@@ -350,7 +358,7 @@ sustituciones~$\Theta$.
 \label{sec:funaux}
 
 Existe una serie de funciones auxilares que son necesarias en el
-algoritmo de $unify$.
+algoritmo de $\ms{unify}$.
 
 \subsection{Variables libres, \emph{Free Variables} ($FV$) }
 \label{sec:fv}
